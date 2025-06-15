@@ -75,13 +75,21 @@ def show_pokemon(request, pokemon_id):
                 request.build_absolute_uri(requested_pokemon.pokemon.image.url)
             )
 
+            if pokemon_entity.previous_evolution:
+                previous_evolution = {
+                    "title_ru": requested_pokemon.pokemon.title,
+                    "pokemon_id": requested_pokemon.pokemon.id,
+                    "img_url": request.build_absolute_uri(requested_pokemon.pokemon.image.url)
+                }
+
             pokemon = {
                     "pokemon_id": requested_pokemon.pokemon.id,
                     "title_ru": requested_pokemon.pokemon.title,
                     "title_en": requested_pokemon.pokemon.title_en,
                     "title_jp": requested_pokemon.pokemon.title_jp,
                     "description": requested_pokemon.pokemon.description,
-                    "img_url": request.build_absolute_uri(requested_pokemon.pokemon.image.url)
+                    "img_url": request.build_absolute_uri(requested_pokemon.pokemon.image.url),
+                    "previous_evolution": previous_evolution
                     }
             break
     else:
