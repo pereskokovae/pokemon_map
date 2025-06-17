@@ -16,7 +16,12 @@ class Pokemon(models.Model):
 
 class PokemonEntity(models.Model):
     pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE, default=1)
-    previous_evolution = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, default=None)
+    previous_evolution = models.ForeignKey(
+                                "self", on_delete=models.CASCADE,
+                                related_name='next_evolution',
+                                null=True,
+                                blank=True
+                                )
     lat = models.FloatField(null=True)
     lon = models.FloatField(null=True)
     appeared_at = models.DateTimeField(default=datetime.datetime.now)

@@ -75,12 +75,20 @@ def show_pokemon(request, pokemon_id):
                 request.build_absolute_uri(requested_pokemon.pokemon.image.url)
             )
 
-            if pokemon_entity.previous_evolution:
+            if requested_pokemon.previous_evolution:
                 previous_evolution = {
-                    "title_ru": requested_pokemon.pokemon.title,
-                    "pokemon_id": requested_pokemon.pokemon.id,
-                    "img_url": request.build_absolute_uri(requested_pokemon.pokemon.image.url)
+                        "title_ru": requested_pokemon.previous_evolution.pokemon.title,
+                        "pokemon_id": requested_pokemon.previous_evolution.pokemon.id,
+                        "img_url": request.build_absolute_uri(requested_pokemon.previous_evolution.pokemon.image.url)
                 }
+                
+            next_evolutions = requested_pokemon.next_evolution.all()
+            for next_evolution in next_evolutions:
+                next_evolution = {
+                    "title_ru": next_evolution.pokemon.title,
+                    "pokemon_id": next_evolution.pokemon.id,
+                    "img_url": request.build_absolute_uri(next_evolution.pokemon.image.url)
+                    }
 
             pokemon = {
                     "pokemon_id": requested_pokemon.pokemon.id,
@@ -89,13 +97,14 @@ def show_pokemon(request, pokemon_id):
                     "title_jp": requested_pokemon.pokemon.title_jp,
                     "description": requested_pokemon.pokemon.description,
                     "img_url": request.build_absolute_uri(requested_pokemon.pokemon.image.url),
-                    "previous_evolution": previous_evolution
+                    "previous_evolution": previous_evolution,
+                    "next_evolution": next_evolution
                     }
+    
             break
     else:
         return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
     
-
     return render(request, 'pokemon.html', context={
         'map': folium_map._repr_html_(), 'pokemon': pokemon
     })
