@@ -25,8 +25,7 @@ class PokemonEntity(models.Model):
         verbose_name="Эволюция",
         on_delete=models.CASCADE,
         related_name='next_evolution',
-        null=True,
-        blank=True)
+        null=True)
     lat = models.FloatField(null=True)
     lon = models.FloatField(null=True)
     appeared_at = models.DateTimeField(default=datetime.datetime.now)
