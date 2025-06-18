@@ -12,18 +12,15 @@ class Pokemon(models.Model):
     title_en = models.CharField(
         max_length=200,
         verbose_name="Имя покемона на английском",
-        null=True,
-        blank=True)
+        default='')
     title_jp = models.CharField(
         max_length=200, 
         verbose_name="Имя покемона на японском",
-        null=True, 
-        blank=True)
+        default='')
     image = models.ImageField(upload_to='pokemons',
                               verbose_name="Картинка покемона",
-                              blank=True,
                               null=True)
-    description = models.TextField(verbose_name="Описание покемона", null=True)
+    description = models.TextField(verbose_name="Описание покемона", default='')
     previous_evolution = models.ForeignKey(
         "self",
         verbose_name="Предыдущая Эволюция",
@@ -39,9 +36,9 @@ class PokemonEntity(models.Model):
     pokemon = models.ForeignKey(
         Pokemon,
         verbose_name="Данные покемона",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         related_name='pokemons',
-        default=1)
+        null=True)
     lat = models.FloatField(verbose_name="Широта", null=True)
     lon = models.FloatField(verbose_name="Долгота", null=True)
     appeared_at = models.DateTimeField(
@@ -50,7 +47,10 @@ class PokemonEntity(models.Model):
     disappeared_at = models.DateTimeField(
         verbose_name="Время исчезания",
         default=datetime.datetime.now)
-    level = models.IntegerField(verbose_name="Уровень", null=True)
+    level = models.IntegerField(
+        verbose_name="Уровень", 
+        null=True,
+        blank=True)
     health = models.IntegerField(
         verbose_name="Здоровье",
         null=True,
