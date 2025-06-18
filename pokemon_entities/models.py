@@ -24,6 +24,12 @@ class Pokemon(models.Model):
                               blank=True,
                               null=True)
     description = models.TextField(verbose_name="Описание покемона", null=True)
+    previous_evolution = models.ForeignKey(
+        "self",
+        verbose_name="Предыдущая Эволюция",
+        on_delete=models.CASCADE,
+        related_name='next_evolution',
+        null=True)
 
     def __str__(self):
         return f'{self.title}'
@@ -35,12 +41,6 @@ class PokemonEntity(models.Model):
         verbose_name="Данные покемона",
         on_delete=models.CASCADE,
         default=1)
-    previous_evolution = models.ForeignKey(
-        "self",
-        verbose_name="Предыдущая Эволюция",
-        on_delete=models.CASCADE,
-        related_name='next_evolution',
-        null=True)
     lat = models.FloatField(verbose_name="Широта", null=True)
     lon = models.FloatField(verbose_name="Долгота", null=True)
     appeared_at = models.DateTimeField(
