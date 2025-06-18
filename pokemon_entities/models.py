@@ -12,7 +12,7 @@ class Pokemon(models.Model):
     title_en = models.CharField(
         max_length=200,
         verbose_name="Имя покемона на английском",
-        null=True, 
+        null=True,
         blank=True)
     title_jp = models.CharField(
         max_length=200, 
@@ -28,7 +28,7 @@ class Pokemon(models.Model):
         "self",
         verbose_name="Предыдущая Эволюция",
         on_delete=models.CASCADE,
-        related_name='next_evolution',
+        related_name='next_evolutions',
         null=True)
 
     def __str__(self):
