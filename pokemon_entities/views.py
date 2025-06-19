@@ -61,51 +61,45 @@ def show_all_pokemons(request):
 
 
 def show_pokemon(request, pokemon_id):
-    pokemons = Pokemon.objects.all()
+    pokemon = Pokemon.objects.get(id=pokemon_id)
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
 
-    for pokemon in pokemons:
-        if pokemon.id == int(pokemon_id):
-            requested_pokemon = pokemon
-
-            if requested_pokemon:
-                previous_evolution = {
-                        "title_ru": requested_pokemon.title,
-                        "pokemon_id": requested_pokemon.id,
-                        "img_url": request.build_absolute_uri(requested_pokemon.image.url)
-                }
- 
-            next_evolutions = requested_pokemon.next_evolutions.all()
-            for evolution in next_evolutions:
-                next_evolution = {
-                    "title_ru": evolution.title,
-                    "pokemon_id": evolution.id,
-                    "img_url": request.build_absolute_uri(evolution.image.url)
-                }
-
-            entities = requested_pokemon.entity.all()
-            for entity in entities:
-                add_pokemon(
-                    folium_map, entity.lat,
-                    entity.lon,
-                    request.build_absolute_uri(entity.pokemon.image.url)
-                )
-
-            pokemon = {
-                    "pokemon_id": requested_pokemon.id,
-                    "title_ru": requested_pokemon.title,
-                    "title_en": requested_pokemon.title_en,
-                    "title_jp": requested_pokemon.title_jp,
-                    "description": requested_pokemon.description,
-                    "img_url": request.build_absolute_uri(requested_pokemon.image.url),
-                    "previous_evolution": previous_evolution,
-                    "next_evolution": next_evolution
-                    }
-    
-            break
-    else:
+    if not pokemon:
         return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
-    
+    else:
+        entities = pokemon.entity.all()
+        for entity in entities:
+            add_pokemon(
+                folium_map, entity.lat,
+                entity.lon,
+                request.build_absolute_uri(entity.pokemon.image.url)
+                )
+            
+        if pokemon.previous_evolution:
+            previous_evolution = {
+                "title_ru": pokemon.previous_evolution.title,
+                "pokemon_id": pokemon.previous_evolution.id,
+                "img_url": request.build_absolute_uri(pokemon.previous_evolution.image.url)
+                }
+
+        evolution = pokemon.next_evolutions.first()
+        next_evolution = {
+            "title_ru": evolution.title,
+            "pokemon_id": evolution.id,
+            "img_url": request.build_absolute_uri(evolution.image.url)
+            }
+
+        pokemon = {
+            "pokemon_id": pokemon.id,
+            "title_ru": pokemon.title,
+            "title_en": pokemon.title_en,
+            "title_jp": pokemon.title_jp,
+            "description": pokemon.description,
+            "img_url": request.build_absolute_uri(pokemon.image.url),
+            "previous_evolution": previous_evolution,
+            "next_evolution": next_evolution
+            }
+     
     return render(request, 'pokemon.html', context={
         'map': folium_map._repr_html_(), 'pokemon': pokemon
     })
