@@ -12,21 +12,21 @@ class Pokemon(models.Model):
     title_en = models.CharField(
         max_length=200,
         verbose_name="Имя покемона на английском",
-        default='')
+        blank=True)
     title_jp = models.CharField(
         max_length=200, 
         verbose_name="Имя покемона на японском",
-        default='')
+        blank=True)
     image = models.ImageField(upload_to='pokemons',
                               verbose_name="Картинка покемона",
                               null=True)
-    description = models.TextField(verbose_name="Описание покемона", default='')
+    description = models.TextField(verbose_name="Описание покемона", blank=True)
     previous_evolution = models.ForeignKey(
         "self",
         verbose_name="Предыдущая Эволюция",
         on_delete=models.CASCADE,
         related_name='next_evolutions',
-        null=True)
+        blank=True)
 
     def __str__(self):
         return f'{self.title}'
@@ -37,7 +37,7 @@ class PokemonEntity(models.Model):
         Pokemon,
         verbose_name="Данные покемона",
         on_delete=models.SET_NULL,
-        related_name='pokemons',
+        related_name='entity',
         null=True)
     lat = models.FloatField(verbose_name="Широта", null=True)
     lon = models.FloatField(verbose_name="Долгота", null=True)

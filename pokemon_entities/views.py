@@ -83,7 +83,7 @@ def show_pokemon(request, pokemon_id):
                     "img_url": request.build_absolute_uri(evolution.image.url)
                 }
 
-            entities = requested_pokemon.pokemons.all()
+            entities = requested_pokemon.entity.all()
             for entity in entities:
                 add_pokemon(
                     folium_map, entity.lat,
