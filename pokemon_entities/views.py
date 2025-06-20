@@ -74,20 +74,37 @@ def show_pokemon(request, pokemon_id):
                 entity.lon,
                 request.build_absolute_uri(entity.pokemon.image.url)
                 )
-            
+       
+        previous_evolution = {}
+        next_evolution = {}
         if pokemon.previous_evolution:
-            previous_evolution = {
-                "title_ru": pokemon.previous_evolution.title,
-                "pokemon_id": pokemon.previous_evolution.id,
-                "img_url": request.build_absolute_uri(pokemon.previous_evolution.image.url)
-                }
+            title_previous_evolution = pokemon.previous_evolution.title
+            id_previous_evolution = pokemon.previous_evolution.id
+            image_url_previous_evolution = request.build_absolute_uri(pokemon.previous_evolution.image.url)
+          
+            evolution = pokemon.previous_evolution.next_evolutions.first()
+            title_next_evolution = evolution.title
+            id_next_evolution = evolution.id
+            image_url_next_evolution = request.build_absolute_uri(evolution.image.url)
+        else:
+            title_previous_evolution = None
+            id_previous_evolution = None
+            image_url_previous_evolution = None
+            title_next_evolution = None
+            id_next_evolution = None
+            image_url_next_evolution = None
 
-        evolution = pokemon.next_evolutions.first()
-        next_evolution = {
-            "title_ru": evolution.title,
-            "pokemon_id": evolution.id,
-            "img_url": request.build_absolute_uri(evolution.image.url)
-            }
+        previous_evolution.update({
+            "title_ru": title_previous_evolution,
+            "pokemon_id": id_previous_evolution,
+            "img_url": image_url_previous_evolution
+            })
+
+        next_evolution.update({
+            "title_ru": title_next_evolution,
+            "pokemon_id": id_next_evolution,
+            "img_url": image_url_next_evolution
+            })
 
         pokemon = {
             "pokemon_id": pokemon.id,
