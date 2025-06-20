@@ -67,7 +67,7 @@ def show_pokemon(request, pokemon_id):
     if not pokemon:
         return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
     else:
-        entities = pokemon.entity.all()
+        entities = pokemon.entities.all()
         for entity in entities:
             add_pokemon(
                 folium_map, entity.lat,
