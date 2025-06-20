@@ -4,7 +4,7 @@ import json
 
 from django.utils import timezone
 from .models import Pokemon, PokemonEntity
-from django.http import HttpResponseNotFound, Http404
+from django.http import HttpResponseNotFound
 from django.shortcuts import render
 
 
